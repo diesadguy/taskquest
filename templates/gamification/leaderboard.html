@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Глобальный рейтинг</h1>
+
+{% if users %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover align-middle ">
+                <thead>
+                    <tr>
+                        <th>Место</th>
+                        <th>Пользователь</th>
+                        <th>Уровень</th>
+                        <th>XP</th>
+                        <th>Streak</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for leaderboard_user in users %}
+                        <tr {% if leaderboard_user == user %}class="table-primary"{% endif %}>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ leaderboard_user.username }}</td>
+                            <td>{{ leaderboard_user.profile.level }}</td>
+                            <td>{{ leaderboard_user.profile.xp }}</td>
+                            <td>{{ leaderboard_user.profile.current_streak }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Пока нет пользователей в рейтинге.
+    </div>
+{% endif %}
+{% endblock %}

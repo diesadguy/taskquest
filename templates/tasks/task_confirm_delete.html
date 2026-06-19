@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Удаление задачи</h1>
+
+<div class="alert alert-warning border-0 shadow-sm">
+    Вы уверены, что хотите удалить задачу <strong>{{ task.title }}</strong>?
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-danger">
+        Да, удалить
+    </button>
+
+    <a href="{% url 'task_detail' task.id %}" class="btn btn-secondary">
+        Отмена
+    </a>
+</form>
+{% endblock %}

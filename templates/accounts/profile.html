@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <!-- ЛЕВАЯ ЧАСТЬ -->
+    <h1 class="mb-0">Мой профиль</h1>
+
+    <!-- ПРАВАЯ ЧАСТЬ -->
+    <div class="d-flex align-items-center gap-2">
+
+        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">
+            Редактировать профиль
+        </a>
+
+        <form method="post" action="{% url 'logout' %}" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">
+                Выйти
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row mb-4 ">
+    <div class="col-md-4 mb-3 ">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="Avatar" width="130" height="130" class="rounded-circle mb-3">
+                {% else %}
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 130px; height: 130px; font-size: 48px;">
+                        {{ user.username|first|upper }}
+                    </div>
+                {% endif %}
+
+                <h4>{{ user.username }}</h4>
+                <p class="text-muted">{{ user.email }}</p>
+
+                <p>
+                    {{ user.profile.bio|default:"Пока ничего не указано" }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8 mb-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">Игровая статистика</h5>
+
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <h3>{{ user.profile.xp }}</h3>
+                        <p class="text-muted mb-0">XP</p>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <h3>{{ user.profile.level }}</h3>
+                        <p class="text-muted mb-0">Уровень</p>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <h3>{{ user.profile.current_streak }}</h3>
+                        <p class="text-muted mb-0">Streak</p>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <h3>
+                            {% if user_rank %}
+                                #{{ user_rank }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </h3>
+                        <p class="text-muted mb-0">Рейтинг</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <p>
+                    <strong>Лучшая серия активности:</strong>
+                    {{ user.profile.longest_streak }}
+                </p>
+
+                <p>
+                    <strong>Последняя активность:</strong>
+                    {% if user.profile.last_activity_date %}
+                        {{ user.profile.last_activity_date|date:"d.m.Y" }}
+                    {% else %}
+                        Пока нет активности
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3 ">
+        <div class="card text-center h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h3>{{ tasks_created_count }}</h3>
+                <p class="text-muted mb-0">Создано задач</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h3>{{ tasks_completed_count }}</h3>
+                <p class="text-muted mb-0">Выполнено задач</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h3>{{ comments_count }}</h3>
+                <p class="text-muted mb-0">Комментариев</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h3>{{ achievements_count }}</h3>
+                <p class="text-muted mb-0">Достижений</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">Полученные достижения</h5>
+
+                {% if achievements %}
+                    <div class="list-group">
+                        {% for user_achievement in achievements %}
+                            <div class="list-group-item border-0 shadow-sm">
+                                <div class="d-flex justify-content-between">
+                                    <strong>
+                                        {% if user_achievement.achievement.icon %}
+                                            {{ user_achievement.achievement.icon }}
+                                        {% else %}
+                                            🏆
+                                        {% endif %}
+
+                                        {{ user_achievement.achievement.title }}
+                                    </strong>
+
+                                    <small class="text-muted">
+                                        {{ user_achievement.received_at|date:"d.m.Y" }}
+                                    </small>
+                                </div>
+
+                                <p class="mb-0 text-muted small">
+                                    {{ user_achievement.achievement.description }}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">
+                        Достижений пока нет.
+                    </p>
+                {% endif %}
+
+                <a href="{% url 'achievements' %}" class="btn btn-outline-primary btn-sm mt-3">
+                    Все достижения
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">Последние начисления XP</h5>
+
+                {% if recent_xp_logs %}
+                    <div class="list-group ">
+                        {% for log in recent_xp_logs %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center border-0">
+                                <div>
+                                    <strong>{{ log.get_action_display }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ log.created_at|date:"d.m.Y H:i" }}
+                                    </small>
+                                </div>
+
+                                <span class="badge bg-success">
+                                    +{{ log.xp_amount }} XP
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">
+                        Начислений XP пока нет.
+                    </p>
+                {% endif %}
+
+                <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary btn-sm mt-3">
+                    Открыть рейтинг
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

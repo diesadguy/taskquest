@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Мои приглашения</h1>
+
+{% if invitations %}
+    <div class="list-group ">
+        {% for invitation in invitations %}
+            <div class="list-group-item border-0 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>{{ invitation.project.title }}</h5>
+
+                        <p class="mb-1 text-muted">
+                            Пригласил: {{ invitation.invited_by.username }}
+                        </p>
+
+                        <small>
+                            Дата: {{ invitation.created_at|date:"d.m.Y H:i" }}
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <form method="post" action="{% url 'accept_invitation' invitation.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">
+                                Принять
+                            </button>
+                        </form>
+
+                        <form method="post" action="{% url 'decline_invitation' invitation.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                Отклонить
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        У вас нет новых приглашений.
+    </div>
+{% endif %}
+{% endblock %}

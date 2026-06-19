@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Редактирование профиля</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h5 class="mb-3">Данные пользователя</h5>
+
+    <div class="mb-3">
+        <label class="form-label">{{ user_form.username.label }}</label>
+        {{ user_form.username }}
+        {{ user_form.username.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ user_form.email.label }}</label>
+        {{ user_form.email }}
+        {{ user_form.email.errors }}
+    </div>
+
+    <hr class="my-4">
+
+    <h5 class="mb-3">Профиль</h5>
+
+    <div class="mb-3">
+        <label class="form-label">{{ profile_form.first_name.label }}</label>
+        {{ profile_form.first_name }}
+        {{ profile_form.first_name.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ profile_form.last_name.label }}</label>
+        {{ profile_form.last_name }}
+        {{ profile_form.last_name.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ profile_form.bio.label }}</label>
+        {{ profile_form.bio }}
+        {{ profile_form.bio.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ profile_form.avatar.label }}</label>
+        {{ profile_form.avatar }}
+        {{ profile_form.avatar.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Сохранить
+    </button>
+
+    <a href="{% url 'profile' %}" class="btn btn-secondary">
+        Отмена
+    </a>
+</form>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Мои задачи</h1>
+
+<ul class="nav nav-tabs mb-3 ">
+    <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#active">
+            Активные ({{ active_tasks_count }})
+        </button>
+    </li>
+
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#completed">
+            Выполненные ({{ completed_tasks_count }})
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+
+    <!-- АКТИВНЫЕ -->
+    <div class="tab-pane fade show active" id="active">
+
+        {% for task in active_tasks %}
+            <div class="list-group mb-2 ">
+                <a href="{% url 'task_detail' task.pk %}" class="list-group-item list-group-item-action">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <h6 class="mb-1 ">{{ task.title }}</h6>
+
+                            {% if task.priority == 'high' %}
+                                <span class="badge bg-danger">Высокий</span>
+                            {% elif task.priority == 'medium' %}
+                                <span class="badge bg-warning text-dark">Средний</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Низкий</span>
+                            {% endif %}
+
+                            <span class="badge bg-info">
+                                {{ task.get_status_display }}
+                            </span>
+
+                            {% if task.deadline < today and task.status != 'done' %}
+                                <span class="badge bg-danger">Просрочено</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-end small text-muted">
+                            {% if task.deadline %}
+                                Дедлайн: {{ task.deadline|date:"d.m.Y" }}
+                            {% else %}
+                                Дедлайн не указан
+                            {% endif %}
+
+                            <br>
+                            Создал: {{ task.created_by.username }}
+                        </div>
+
+                    </div>
+
+                </a>
+            </div>
+
+        {% empty %}
+            <div class="alert alert-info">
+                Активных задач нет.
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- ВЫПОЛНЕННЫЕ -->
+    <div class="tab-pane fade" id="completed">
+
+        {% for task in completed_tasks %}
+            <div class="list-group mb-2">
+                <a href="{% url 'task_detail' task.pk %}" class="list-group-item list-group-item-success list-group-item-action">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <h6 class="mb-1">{{ task.title }}</h6>
+
+                            {% if task.priority == 'high' %}
+                                <span class="badge bg-danger">Высокий</span>
+                            {% elif task.priority == 'medium' %}
+                                <span class="badge bg-warning text-dark">Средний</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Низкий</span>
+                            {% endif %}
+
+                            <span class="badge bg-success">
+                                {{ task.get_status_display }}
+                            </span>
+
+                            <span class="badge bg-success">
+                                Выполнена
+                            </span>
+                        </div>
+
+                        <div class="text-end small text-muted">
+
+                            {% if task.deadline %}
+                                Дедлайн: {{ task.deadline|date:"d.m.Y" }}
+                            {% else %}
+                                Дедлайн не указан
+                            {% endif %}
+
+                            <br>
+                            Создал: {{ task.created_by.username }}
+
+                            {% if task.completed_at %}
+                                <br>
+                                <span class="text-muted">
+                                    Выполнена: {{ task.completed_at|date:"d.m.Y H:i" }}
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </a>
+            </div>
+
+        {% empty %}
+            <div class="alert alert-success">
+                Выполненных задач пока нет.
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

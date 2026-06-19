@@ -1,0 +1,19 @@
+.kanban-column {
+    min-height: 500px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.kanban-task {
+    cursor: grab;
+}
+
+.kanban-task:active {
+    cursor: grabbing;
+}
+
+.list-group-item:hover {
+    transform: translateY(-2px);
+    transition: 0.15s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}

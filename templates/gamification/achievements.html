@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Достижения</h1>
+
+<div class="row">
+    {% for achievement in all_achievements %}
+        <div class="col-md-4 mb-3 ">
+            <div class="card h-100 border-0 shadow-sm {% if achievement.id in received_ids %}border-success{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {% if achievement.icon %}
+                            {{ achievement.icon }}
+                        {% else %}
+                            🏆
+                        {% endif %}
+
+                        {{ achievement.title }}
+                    </h5>
+
+                    <p class="card-text">
+                        {{ achievement.description }}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        Условие:
+                        {{ achievement.get_condition_type_display }}
+                        — {{ achievement.condition_value }}
+                    </p>
+
+                    <p class="text-muted">
+                        Награда: +{{ achievement.xp_reward }} XP
+                    </p>
+
+                    {% if achievement.id in received_ids %}
+                        <span class="badge bg-success">
+                            Получено
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            Не получено
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info">
+            Достижения пока не созданы. Добавьте их через Django Admin.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

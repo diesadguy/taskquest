@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">{{ title }}</h1>
+
+<p>
+    Проект:
+    <a href="{% url 'project_detail' project.id %}">
+        {{ project.title }}
+    </a>
+</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.title.label }}</label>
+        {{ form.title }}
+        {{ form.title.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.description.label }}</label>
+        {{ form.description }}
+        {{ form.description.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.assignee.label }}</label>
+        {{ form.assignee }}
+        {{ form.assignee.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.deadline.label }}</label>
+        {{ form.deadline }}
+        {{ form.deadline.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.priority.label }}</label>
+        {{ form.priority }}
+        {{ form.priority.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.status.label }}</label>
+        {{ form.status }}
+        {{ form.status.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ form.tags.label }}</label>
+        {{ form.tags }}
+        {{ form.tags.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Сохранить
+    </button>
+
+    <a href="{% url 'kanban_board' project.id %}" class="btn btn-secondary">
+        Отмена
+    </a>
+</form>
+{% endblock %}
